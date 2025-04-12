@@ -47,7 +47,12 @@ router.post("/:id", async (req, res) => {
       // Monta o histórico completo e pede causa raiz + ação
       const prompt = [
         { role: "system", content: "Você é um especialista na técnica dos 5 porquês." },
-        { role: "user", content: session.conversation.join("\n") + "\nCom base nas respostas acima, forneça a causa raiz provável e uma ação corretiva para o problema apresentado." }
+        {
+          role: "user",
+          content:
+            session.conversation.join("\n") +
+            "\nCom base nas respostas acima, forneça a causa raiz provável e uma ação corretiva para o problema apresentado."
+        }
       ];
 
       const aiResponse = await axios.post(
@@ -89,13 +94,9 @@ router.post("/:id", async (req, res) => {
   }
 });
 
+// Histórico (para visualização ou testes)
 router.get("/", async (req, res) => {
   const sessions = await Session.find().sort({ createdAt: -1 }).limit(20);
-  res.json(sessions);
-});
-
-export default router;
-
   res.json(sessions);
 });
 
