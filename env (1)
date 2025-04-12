@@ -1,0 +1,3 @@
+PORT=10000
+MONGO_URI=mongodb+srv://mbuser:Mb108934@cluster0.abcd.mongodb.net/mb?retryWrites=true&w=majority
+OPENAI_API_KEY=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
