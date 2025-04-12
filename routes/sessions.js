@@ -1,26 +1,53 @@
-const aiResponse = await axios.post(
-  "https://api.openai.com/v1/chat/completions",
-  {
-    model: "gpt-3.5-turbo",
-    messages: [
+import express from "express";
+import axios from "axios";
+import Session from "../models/Session.js";
+
+const router = express.Router();
+
+router.post("/", async (req, res) => {
+  const { problem } = req.body;
+
+  try {
+    const aiResponse = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
       {
-        role: "system",
-        content: `Você é um facilitador da técnica dos 5 porquês. Faça até 5 perguntas começando com "Por quê?", de forma encadeada, para identificar a causa raiz de um problema. Após a quinta pergunta, sugira uma causa raiz provável e uma ação corretiva.`
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: `Você é um facilitador da técnica dos 5 porquês. Faça até 5 perguntas começando com "Por quê?", de forma encadeada. Após a quinta pergunta, identifique a causa raiz e proponha uma ação corretiva.`
+          },
+          {
+            role: "user",
+            content: `Problema: ${problem}`
+          }
+        ]
       },
       {
-        role: "user",
-        content: `Problema: ${problem}`
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        }
       }
-    ]
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    }
-  }
-);
+    );
 
+    const resposta = aiResponse.data.choices[0].message.content;
+
+    const session = new Session({
+      problem,
+      conversation: [problem, resposta]
+    });
+
+    await session.save();
+    res.json(session);
+  } catch (err) {
+    console.error("Erro ao consultar OpenAI:", err.message);
+    res.status(500).json({ error: "Erro ao consultar OpenAI" });
+  }
+});
+
+router.get("/", async (req, res) => {
+  const sessions = await Session.find().sort({ createdAt: -1 }).limit(20);
   res.json(sessions);
 });
 
