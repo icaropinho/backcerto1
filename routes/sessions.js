@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     const aiResponse = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         messages: [
           { role: "system", content: "Você é um facilitador da técnica dos 5 porquês." },
           { role: "user", content: `Problema: ${problem}. Faça a primeira pergunta.` }
