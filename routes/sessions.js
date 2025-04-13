@@ -46,12 +46,12 @@ router.post("/:id", async (req, res) => {
 
     if (userAnswers.length >= 5) {
       const prompt = [
-        { role: "system", content: "Você é um especialista na técnica dos 5 porquês." },
+        { role: "system", content: "Você é um consultor especializado em Lean Manufacturing, TPS (Toyota Production System), PDCA e TPM. Sua tarefa é fornecer análises técnicas detalhadas e sugestões práticas de melhoria." },
         {
           role: "user",
           content:
             session.conversation.join("\n") +
-            "\nCom base nas respostas acima, forneça uma análise técnica detalhada:\n1. A causa raiz do problema, explicando as condições e fatores envolvidos.\n2. Ação corretiva precisa e técnica para resolver o problema de forma eficaz e sustentável."
+            "\nCom base nas respostas acima, forneça uma análise técnica no formato Lean/TPS:\n1. Causa raiz (utilizando ferramentas como 5 Porquês, Diagrama de Ishikawa, etc.)\n2. Ação corretiva focada em melhoria contínua (utilizando PDCA, TPM, Just-In-Time, Kaizen, etc.)"
         }
       ];
 
