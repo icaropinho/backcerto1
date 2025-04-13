@@ -51,7 +51,7 @@ router.post("/:id", async (req, res) => {
           role: "user",
           content:
             session.conversation.join("\n") +
-            "\nCom base nas respostas acima, responda em no máximo 2 linhas:\n1. Causa raiz:\n2. Ação corretiva:"
+            "\nCom base nas respostas acima, forneça uma análise técnica detalhada:\n1. A causa raiz do problema, explicando as condições e fatores envolvidos.\n2. Ação corretiva precisa e técnica para resolver o problema de forma eficaz e sustentável."
         }
       ];
 
