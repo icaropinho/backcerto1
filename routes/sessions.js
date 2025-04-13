@@ -41,18 +41,13 @@ router.post("/:id", async (req, res) => {
 
     session.conversation.push(`Usuário: ${answer}`);
 
-    const userAnswers = session.conversation.filter(l => l.startsWith("Usuário")).length;
+    const userAnswers = session.conversation.filter(l => l.startsWith("Usuário")).map(l => l.replace("Usuário: ", ""));
+    const respostaAnterior = userAnswers[userAnswers.length - 1];
 
-    if (userAnswers >= 5) {
-      // Monta o histórico completo e pede causa raiz + ação
+    if (userAnswers.length >= 5) {
       const prompt = [
         { role: "system", content: "Você é um especialista na técnica dos 5 porquês." },
-        {
-          role: "user",
-          content:
-            session.conversation.join("\n") +
-            "\nCom base nas respostas acima, forneça a causa raiz provável e uma ação corretiva para o problema apresentado."
-        }
+        { role: "user", content: session.conversation.join("\n") + "\nCom base nas respostas acima, forneça a causa raiz provável e uma ação corretiva para o problema apresentado." }
       ];
 
       const aiResponse = await axios.post(
@@ -78,8 +73,7 @@ router.post("/:id", async (req, res) => {
         result: resultado
       });
     } else {
-      // Próxima pergunta: "Por quê?"
-      const nextQuestion = `Por que? (${userAnswers + 1}/5)`;
+      const nextQuestion = `Por que "${respostaAnterior}"? (${userAnswers.length + 1}/5)`;
       session.conversation.push(`IA: ${nextQuestion}`);
       await session.save();
 
@@ -94,7 +88,7 @@ router.post("/:id", async (req, res) => {
   }
 });
 
-// Histórico (para visualização ou testes)
+// Lista últimas sessões (opcional para debug)
 router.get("/", async (req, res) => {
   const sessions = await Session.find().sort({ createdAt: -1 }).limit(20);
   res.json(sessions);
