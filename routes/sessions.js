@@ -51,7 +51,7 @@ router.post("/:id", async (req, res) => {
           role: "user",
           content:
             session.conversation.join("\n") +
-            "\nCom base nas respostas acima, forneça uma análise técnica no formato Lean/TPS:\n1. Causa raiz (utilizando ferramentas como 5 Porquês, Diagrama de Ishikawa, etc.)\n2. Ação corretiva focada em melhoria contínua (utilizando PDCA, TPM, Just-In-Time, Kaizen, etc.)"
+            "\nCom base nas respostas acima, forneça uma análise técnica no formato Lean/TPS:\n1. Causa raiz (utilizando ferramentas como 5 Porquês, Diagrama de Ishikawa, análise de fluxos de valor, etc.)\n2. Ação corretiva focada em melhoria contínua, utilizando métodos como PDCA, Kaizen (melhoria incremental), TPM e Just-In-Time para otimização dos processos e eliminação de desperdícios."
         }
       ];
 
