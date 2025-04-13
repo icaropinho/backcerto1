@@ -51,14 +51,14 @@ router.post("/:id", async (req, res) => {
           role: "user",
           content:
             session.conversation.join("\n") +
-            "\nCom base nas respostas acima, diga de forma objetiva:\n1. A causa raiz\n2. Uma ação corretiva direta"
+            "\nCom base nas respostas acima, responda em no máximo 2 linhas:\n1. Causa raiz:\n2. Ação corretiva:"
         }
       ];
 
       const aiResponse = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-4", // ✅ agora usando GPT-4
+          model: "gpt-4", // Agora usando GPT-4
           messages: prompt
         },
         {
