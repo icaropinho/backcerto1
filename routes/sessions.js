@@ -47,13 +47,18 @@ router.post("/:id", async (req, res) => {
     if (userAnswers.length >= 5) {
       const prompt = [
         { role: "system", content: "Você é um especialista na técnica dos 5 porquês." },
-        { role: "user", content: session.conversation.join("\n") + "\nCom base nas respostas acima, forneça a causa raiz provável e uma ação corretiva para o problema apresentado." }
+        {
+          role: "user",
+          content:
+            session.conversation.join("\n") +
+            "\nCom base nas respostas acima, diga de forma objetiva:\n1. A causa raiz\n2. Uma ação corretiva direta"
+        }
       ];
 
       const aiResponse = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-4",
+          model: "gpt-4", // ✅ agora usando GPT-4
           messages: prompt
         },
         {
@@ -88,7 +93,7 @@ router.post("/:id", async (req, res) => {
   }
 });
 
-// Lista últimas sessões (opcional para debug)
+// Consulta últimas sessões (opcional)
 router.get("/", async (req, res) => {
   const sessions = await Session.find().sort({ createdAt: -1 }).limit(20);
   res.json(sessions);
